@@ -1,0 +1,25 @@
+{
+  "name": "sentinalflag",
+  "version": "1.0.0",
+  "description": "🚩 Sentinel Flag – Flag Management System\r 📌 Overview\r Sentinel Flag is a Flag Management System designed to efficiently manage, monitor, and control feature flags within an application.\r It enables dynamic activation and deactivation of features without redeploying the application, improving flexibility, testing workflows, and production stability.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KartikEy4codes/SentinalFlag.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KartikEy4codes/SentinalFlag/issues"
+  },
+  "homepage": "https://github.com/KartikEy4codes/SentinalFlag#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1"
+  }
+}
