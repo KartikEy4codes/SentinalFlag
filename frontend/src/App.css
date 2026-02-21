@@ -1,0 +1,4 @@
+/* Main App Styles - Tailwind classes used in JSX */
+.app-container {
+  min-height: 100vh;
+}
