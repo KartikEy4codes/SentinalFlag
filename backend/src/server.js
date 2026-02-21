@@ -15,11 +15,15 @@ const {
 const flagRoutes = require('./routes/flagRoutes');
 const authRoutes = require('./routes/authRoutes');
 const auditRoutes = require('./routes/auditRoutes');
+const { initChangeStream } = require('./services/flagService');
 
 const app = express();
 
 // Connect to database
-connectDB();
+connectDB().then(() => {
+  // Initialize real-time flag engine
+  initChangeStream();
+});
 
 // Middleware
 app.use(helmet());

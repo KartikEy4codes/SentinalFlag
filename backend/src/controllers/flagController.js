@@ -1,53 +1,6 @@
 const Flag = require('../models/Flag');
 const AuditLog = require('../models/AuditLog');
-
-// In-memory flag cache
-const flagCache = new Map();
-
-/**
- * Refresh the in-memory flag cache
- */
-const refreshCache = async () => {
-  try {
-    const flags = await Flag.find({ isActive: true });
-    flagCache.clear();
-    flags.forEach((flag) => {
-      flagCache.set(flag.name, flag);
-    });
-    console.log(`[Cache] Refreshed: ${flagCache.size} flags cached.`);
-  } catch (error) {
-    console.error('[Cache] Error refreshing cache:', error);
-  }
-};
-
-/**
- * Evaluate a flag for a specific user/context
- * @param {string} flagName Name of the flag
- * @param {Object} context User context (id, email, attributes, etc.)
- */
-const evaluateFlag = (flagName, context = {}) => {
-  const flag = flagCache.get(flagName);
-
-  if (!flag || !flag.enabled) return false;
-
-  // 1. User Targeting
-  if (flag.strategyType === 'user-targeting' && context.userId) {
-    if (flag.targetUsers.includes(context.userId)) return true;
-  }
-
-  // 2. Percentage Rollout
-  if (flag.rolloutPercentage > 0) {
-    // Basic hash-based rollout if context.userId exists, otherwise random
-    if (context.userId) {
-      const hash = [...context.userId].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      return (hash % 100) < flag.rolloutPercentage;
-    }
-    return Math.random() * 100 < flag.rolloutPercentage;
-  }
-
-  // Default to enabled if no complex rules and enabled is true
-  return flag.strategyType === 'percentage' && flag.rolloutPercentage === 0 ? flag.enabled : false;
-};
+const { refreshCache } = require('../services/flagService');
 
 // Initialize cache
 refreshCache();
@@ -282,54 +235,5 @@ exports.deleteFlag = async (req, res) => {
   }
 };
 
-// @desc    Toggle flag status
-// @route   PATCH /api/flags/:id/toggle
-// @access  Private/Admin
-exports.toggleFlag = async (req, res) => {
-  try {
-    let flag = await Flag.findById(req.params.id);
-
-    if (!flag) {
-      return res.status(404).json({
-        success: false,
-        message: 'Flag not found',
-      });
-    }
-
-    const oldStatus = flag.enabled;
-    flag.enabled = !flag.enabled;
-    flag.updatedBy = req.user._id;
-    flag = await flag.save();
-
-    // Log the action
-    const action = flag.enabled ? 'ENABLE' : 'DISABLE';
-    await AuditLog.create({
-      action,
-      flagId: flag._id,
-      flagName: flag.name,
-      userId: req.user._id,
-      userName: req.user.name,
-      changes: { enabled: { old: oldStatus, new: flag.enabled } },
-      ipAddress: req.ip,
-    });
-
-    // Refresh cache
-    await refreshCache();
-
-    res.status(200).json({
-      success: true,
-      message: `Flag ${action.toLowerCase()}d successfully`,
-      data: flag,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error toggling flag',
-      error: error.message,
-    });
-  }
-};
-
-// Export evaluation and refresh for internal use or other controllers
-exports.evaluateFlag = evaluateFlag;
-exports.refreshCache = refreshCache;
+// Export functions for internal use or other controllers
+// (evaluation and refresh are now in services/flagService.js)
