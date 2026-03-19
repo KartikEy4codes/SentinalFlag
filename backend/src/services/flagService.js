@@ -32,16 +32,18 @@ const initChangeStream = () => {
         });
 
         changeStream.on('error', (error) => {
-            console.error('[Change Stream] Error:', error);
-            // Attempt to restart the stream after a delay
-            setTimeout(initChangeStream, 5000);
+            if (error.message && (error.message.includes('$changeStream') || error.message.includes('replica'))) {
+                console.warn('⚠️ [Change Stream] MongoDB is running as a standalone node. Change streams are disabled.');
+                // Do not retry
+            } else {
+                console.error('[Change Stream] Error:', error.message);
+                setTimeout(initChangeStream, 5000);
+            }
         });
 
         console.log('✅ [Change Stream] Watching Flag collection for changes...');
     } catch (error) {
-        console.error('[Change Stream] Initialization error:', error);
-        // Attempt to restart the stream after a delay
-        setTimeout(initChangeStream, 5000);
+        console.error('[Change Stream] Initialization error:', error.message);
     }
 };
 
