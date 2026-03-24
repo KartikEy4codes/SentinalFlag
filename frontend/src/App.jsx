@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { supabase } from './utils/supabase';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,6 +15,31 @@ import FlagsPage from './pages/FlagsPage';
 import LoginPage from './pages/LoginPage';
 
 import './App.css';
+
+function Todos() {
+  const [todos, setTodos] = useState([])
+
+  useEffect(() => {
+    async function getTodos() {
+      const { data: todos } = await supabase.from('todos').select()
+
+      if (todos) {
+        setTodos(todos)
+      }
+    }
+
+    getTodos()
+  }, [])
+
+  return (
+    <ul className="p-8">
+      {todos.map((todo) => (
+        <li key={todo.id} className="p-4 bg-white shadow mb-2 rounded">{todo.name}</li>
+      ))}
+    </ul>
+  )
+}
+
 
 const ProtectedRoute = ({ component: Component }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -37,6 +63,7 @@ function AppContent() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/flags" element={<ProtectedRoute component={FlagsPage} />} />
+            <Route path="/todos" element={<Todos />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
