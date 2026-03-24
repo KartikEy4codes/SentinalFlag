@@ -12,6 +12,7 @@ import Sidebar from './components/Common/Sidebar';
 import Home from './pages/Home';
 import FlagsPage from './pages/FlagsPage';
 import LoginPage from './pages/LoginPage';
+import UserPage from './pages/UserPage';
 
 import './App.css';
 
@@ -38,6 +39,7 @@ function AppContent() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/flags" element={<ProtectedRoute component={FlagsPage} />} />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/users" element={<ProtectedRoute component={UserPage} />} />
           </Routes>
         </main>
       </div>
