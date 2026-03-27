@@ -128,6 +128,15 @@ exports.createFlag = async (req, res) => {
       data: flag,
     });
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: messages,
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Error creating flag',
@@ -230,6 +239,53 @@ exports.deleteFlag = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error deleting flag',
+      error: error.message,
+    });
+  }
+};
+
+// @desc    Toggle flag enabled/disabled
+// @route   PATCH /api/flags/:id/toggle
+// @access  Private/Admin
+exports.toggleFlag = async (req, res) => {
+  try {
+    let flag = await Flag.findById(req.params.id);
+
+    if (!flag) {
+      return res.status(404).json({
+        success: false,
+        message: 'Flag not found',
+      });
+    }
+
+    const oldValue = flag.enabled;
+    flag.enabled = !flag.enabled;
+    flag.updatedBy = req.user._id;
+    flag = await flag.save();
+
+    // Log the action
+    await AuditLog.create({
+      action: 'TOGGLE',
+      flagId: flag._id,
+      flagName: flag.name,
+      userId: req.user._id,
+      userName: req.user.name,
+      changes: { enabled: { old: oldValue, new: flag.enabled } },
+      ipAddress: req.ip,
+    });
+
+    // Refresh cache
+    await refreshCache();
+
+    res.status(200).json({
+      success: true,
+      message: `Flag ${flag.enabled ? 'enabled' : 'disabled'} successfully`,
+      data: flag,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error toggling flag',
       error: error.message,
     });
   }

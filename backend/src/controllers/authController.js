@@ -1,12 +1,13 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const config = require('../config/env');
 
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Check if user exists
     const userExists = await User.findOne({ email });
@@ -17,12 +18,27 @@ exports.register = async (req, res) => {
       });
     }
 
+    // Build role for new user (default user, viewer allowed)
+    const allowedRoles = ['user', 'viewer'];
+    let roleToAssign = 'user';
+
+    if (role && allowedRoles.includes(role)) {
+      roleToAssign = role;
+    }
+
+    if (role && !allowedRoles.includes(role)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Only user/viewer roles are allowed for registration.',
+      });
+    }
+
     // Create user
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, role: roleToAssign });
 
     // Generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE,
+    const token = jwt.sign({ id: user._id }, config.JWT_SECRET, {
+      expiresIn: config.JWT_EXPIRE,
     });
 
     res.status(201).json({
@@ -84,8 +100,8 @@ exports.login = async (req, res) => {
     await user.save();
 
     // Generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE,
+    const token = jwt.sign({ id: user._id }, config.JWT_SECRET, {
+      expiresIn: config.JWT_EXPIRE,
     });
 
     res.status(200).json({
