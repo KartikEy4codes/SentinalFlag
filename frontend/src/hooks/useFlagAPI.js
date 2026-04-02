@@ -14,9 +14,13 @@ export const useFlagAPI = () => {
       toast.success('Flag created successfully');
       return response.data;
     } catch (err) {
-      const message = err.response?.data?.message || 'Error creating flag';
-      setError(message);
-      toast.error(message);
+      const responseData = err.response?.data;
+      const message = responseData?.message || 'Error creating flag';
+      const detailed = Array.isArray(responseData?.errors)
+        ? `${message}: ${responseData.errors.join(', ')}`
+        : message;
+      setError(detailed);
+      toast.error(detailed);
       throw err;
     } finally {
       setLoading(false);

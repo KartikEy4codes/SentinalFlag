@@ -13,7 +13,7 @@ import Sidebar from './components/Common/Sidebar';
 import Home from './pages/Home';
 import FlagsPage from './pages/FlagsPage';
 import LoginPage from './pages/LoginPage';
-import UserPage from './pages/UserPage';
+import SignupPage from './pages/SignupPage';
 
 import './App.css';
 
@@ -63,6 +63,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/flags" element={<ProtectedRoute component={FlagsPage} />} />
             <Route path="/todos" element={<Todos />} />
             <Route path="*" element={<Navigate to="/" />} />

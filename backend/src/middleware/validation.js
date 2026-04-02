@@ -35,6 +35,7 @@ exports.validateAuthInput = (req, res, next) => {
     name: Joi.string().max(100),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
+    role: Joi.string().valid('user', 'viewer').optional(),
   });
 
   const { error, value } = schema.validate(req.body, { abortEarly: false });
