@@ -4,7 +4,8 @@
   "description": "🚩 Sentinel Flag – Flag Management System\r 📌 Overview\r Sentinel Flag is a Flag Management System designed to efficiently manage, monitor, and control feature flags within an application.\r It enables dynamic activation and deactivation of features without redeploying the application, improving flexibility, testing workflows, and production stability.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,9 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "mongoose": "^9.2.1"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {}
 }
