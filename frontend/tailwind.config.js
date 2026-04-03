@@ -26,3 +26,9 @@ module.exports = {
     },
     plugins: [],
 }
+module.exports = {
+  darkMode: "class", // MUST
+  theme: {
+    extend: {},
+  },
+};

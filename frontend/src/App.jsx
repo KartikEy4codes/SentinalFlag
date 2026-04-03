@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import FlagsPage from './pages/FlagsPage';
 import LoginPage from './pages/LoginPage';
 import UserPage from './pages/UserPage';
+import SettingsPage from './pages/Setting';
 
 import './App.css';
 
@@ -40,6 +41,7 @@ function AppContent() {
             <Route path="/flags" element={<ProtectedRoute component={FlagsPage} />} />
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/users" element={<ProtectedRoute component={UserPage} />} />
+            <Route path="/settings" element={<ProtectedRoute component={SettingsPage} />} />
           </Routes>
         </main>
       </div>
