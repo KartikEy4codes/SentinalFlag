@@ -1,67 +1,30 @@
-import api from './api';
+import axios from "axios";
 
+// ✅ Create API instance
+const api = axios.create({
+  baseURL: "http://localhost:5000/api", // change if needed
+});
+
+// 🔹 FLAG SERVICE
 export const flagService = {
-  // Get all flags
-  getAllFlags: (params = {}) => {
-    return api.get('/flags', { params });
-  },
-
-  // Get single flag
-  getFlag: (id) => {
-    return api.get(`/flags/${id}`);
-  },
-
-  // Create flag
-  createFlag: (flagData) => {
-    return api.post('/flags', flagData);
-  },
-
-  // Update flag
-  updateFlag: (id, flagData) => {
-    return api.put(`/flags/${id}`, flagData);
-  },
-
-  // Delete flag
-  deleteFlag: (id) => {
-    return api.delete(`/flags/${id}`);
-  },
-
-  // Toggle flag status
-  toggleFlag: (id) => {
-    return api.patch(`/flags/${id}/toggle`);
-  },
+  getAllFlags: (params = {}) => api.get('/flags', { params }),
+  getFlag: (id) => api.get(`/flags/${id}`),
+  createFlag: (flagData) => api.post('/flags', flagData),
+  updateFlag: (id, flagData) => api.put(`/flags/${id}`, flagData),
+  deleteFlag: (id) => api.delete(`/flags/${id}`),
+  toggleFlag: (id) => api.patch(`/flags/${id}/toggle`),
 };
 
+// 🔹 AUTH SERVICE
 export const authService = {
-  // Register
-  register: (data) => {
-    return api.post('/auth/register', data);
-  },
-
-  // Login
-  login: (email, password) => {
-    return api.post('/auth/login', { email, password });
-  },
-
-  // Get current user
-  getCurrentUser: () => {
-    return api.get('/auth/me');
-  },
-
-  // Logout
-  logout: () => {
-    localStorage.removeItem('authToken');
-  },
+  register: (data) => api.post('/auth/register', data),
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  getCurrentUser: () => api.get('/auth/me'),
+  logout: () => localStorage.removeItem('authToken'),
 };
 
+// 🔹 AUDIT SERVICE
 export const auditService = {
-  // Get audit logs
-  getAuditLogs: (params = {}) => {
-    return api.get('/audit', { params });
-  },
-
-  // Get audit stats
-  getAuditStats: () => {
-    return api.get('/audit/stats/summary');
-  },
+  getAuditLogs: (params = {}) => api.get('/audit', { params }),
+  getAuditStats: () => api.get('/audit/stats/summary'),
 };

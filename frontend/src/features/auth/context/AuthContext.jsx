@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { authService } from '../services/flagService';
+import { authService } from '../../flags/services/flagService';
 
 export const AuthContext = createContext();
 

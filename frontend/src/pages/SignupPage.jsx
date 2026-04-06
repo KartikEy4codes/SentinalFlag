@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/flagService';
-import { useAuth } from '../hooks/useAuth';
+import { authService } from '../features/flags/services/flagService';
+import { useAuth } from '../features/auth/hooks/useAuth';
 
-export const SignupPage = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'user' });
+const SignupPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'user',
+  });
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
 
+  // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/flags');
@@ -27,9 +35,12 @@ export const SignupPage = () => {
 
     try {
       setLoading(true);
+
       const response = await authService.register(formData);
+
       login(response.data.token, response.data.user);
       navigate('/flags');
+
     } catch (err) {
       console.error('Signup error:', err);
       setError(err.response?.data?.message || 'Signup failed. Please try again.');
@@ -41,13 +52,24 @@ export const SignupPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md p-8 bg-gray-800/70 border border-purple-500/30 rounded-xl shadow-xl backdrop-blur-sm">
-        <h2 className="text-3xl font-bold text-white mb-4 text-center">Create Account</h2>
+        
+        <h2 className="text-3xl font-bold text-white mb-4 text-center">
+          Create Account
+        </h2>
 
-        {error && <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 text-red-200 rounded">{error}</div>}
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 text-red-200 rounded">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          
+          {/* Name */}
           <div>
-            <label className="text-sm text-slate-200 uppercase tracking-wider">Name</label>
+            <label className="text-sm text-slate-200 uppercase tracking-wider">
+              Name
+            </label>
             <input
               type="text"
               name="name"
@@ -59,8 +81,11 @@ export const SignupPage = () => {
             />
           </div>
 
+          {/* Email */}
           <div>
-            <label className="text-sm text-slate-200 uppercase tracking-wider">Email</label>
+            <label className="text-sm text-slate-200 uppercase tracking-wider">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -72,8 +97,11 @@ export const SignupPage = () => {
             />
           </div>
 
+          {/* Password */}
           <div>
-            <label className="text-sm text-slate-200 uppercase tracking-wider">Password</label>
+            <label className="text-sm text-slate-200 uppercase tracking-wider">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -86,8 +114,11 @@ export const SignupPage = () => {
             />
           </div>
 
+          {/* Role */}
           <div>
-            <label className="text-sm text-slate-200 uppercase tracking-wider">Role</label>
+            <label className="text-sm text-slate-200 uppercase tracking-wider">
+              Role
+            </label>
             <select
               name="role"
               value={formData.role}
@@ -99,6 +130,7 @@ export const SignupPage = () => {
             </select>
           </div>
 
+          {/* Button */}
           <button
             type="submit"
             disabled={loading}
@@ -108,9 +140,13 @@ export const SignupPage = () => {
           </button>
         </form>
 
+        {/* Footer */}
         <p className="mt-4 text-sm text-slate-300 text-center">
           Already have an account?{' '}
-          <button className="text-blue-300 underline" onClick={() => navigate('/login')}>
+          <button
+            className="text-blue-300 underline"
+            onClick={() => navigate('/login')}
+          >
             Log In
           </button>
         </p>

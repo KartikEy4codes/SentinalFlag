@@ -43,17 +43,17 @@ const AuditLogs = () => {
         <input
           type="text"
           placeholder="Search logs..."
-          className="flex-1 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400 transition"
+          className="flex-1 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        <select className="px-4 py-2 border rounded-lg hover:border-blue-400 transition">
+        <select className="px-4 py-2 border rounded-lg">
           <option>All Actions</option>
           <option>Enabled</option>
           <option>Disabled</option>
           <option>Updated</option>
         </select>
 
-        <select className="px-4 py-2 border rounded-lg hover:border-blue-400 transition">
+        <select className="px-4 py-2 border rounded-lg">
           <option>All Environments</option>
           <option>Production</option>
           <option>Staging</option>
@@ -62,9 +62,9 @@ const AuditLogs = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gray-100 text-gray-600">
+          <thead className="border-b bg-gray-100 text-gray-600">
             <tr>
               <th className="p-4">User</th>
               <th className="p-4">Action</th>
@@ -77,28 +77,20 @@ const AuditLogs = () => {
 
           <tbody>
             {logs.map((log, index) => (
-              <tr
-                key={index}
-                className={`border-b hover:bg-gray-50 transition ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50/40"
-                }`}
-              >
+              <tr key={index} className="border-b hover:bg-gray-50">
+                
                 <td className="p-4 font-medium text-gray-800">
                   {log.user}
                 </td>
 
-                {/* Action Tag */}
-                <td className="p-4">
-                  <span className="px-2 py-1 text-xs rounded-md bg-purple-100 text-purple-600">
-                    {log.action}
-                  </span>
+                <td className="p-4 text-gray-600">
+                  {log.action}
                 </td>
 
                 <td className="p-4 text-gray-700">
                   {log.target}
                 </td>
 
-                {/* Environment Badge */}
                 <td className="p-4">
                   <span className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600">
                     {log.environment}
@@ -109,7 +101,6 @@ const AuditLogs = () => {
                   {log.time}
                 </td>
 
-                {/* Status Badge */}
                 <td className="p-4">
                   <span
                     className={`px-3 py-1 text-xs rounded-full ${
@@ -121,6 +112,7 @@ const AuditLogs = () => {
                     {log.status}
                   </span>
                 </td>
+
               </tr>
             ))}
           </tbody>
