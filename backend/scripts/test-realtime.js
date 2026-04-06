@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const { initChangeStream, refreshCache } = require('./services/flagService');
-const Flag = require('./models/Flag');
+const { initChangeStream, refreshCache } = require('../src/modules/flags/flag.service');
+const Flag = require('../src/modules/flags/flag.model');
 
 dotenv.config();
 

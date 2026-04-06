@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import FlagList from '../components/FlagList/FlagList';
-import FlagForm from '../components/FlagForm/FlagForm';
-import Modal from '../components/Common/Modal';
-import Dashboard from '../components/Dashboard/Dashboard';
-import { useFlagAPI } from '../hooks/useFlagAPI';
+import FlagList from '../features/flags/components/FlagList';
+import FlagForm from '../features/flags/components/FlagForm';
+import Modal from '../components/ui/Modal';
+import Dashboard from '../features/dashboard/components/Dashboard';
+import { useFlagAPI } from '../features/flags/hooks/useFlagAPI';
 import { Search, Filter } from 'lucide-react';
-import { flagService } from '../services/flagService';
+import { flagService } from '../features/flags/services/flagService';
 import { mockFlags } from '../utils/mockData';
 
 export const FlagsPage = () => {

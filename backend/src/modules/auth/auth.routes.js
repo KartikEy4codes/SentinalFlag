@@ -4,9 +4,9 @@ const {
   login,
   getCurrentUser,
   getAllUsers,
-} = require('../controllers/authController');
-const { auth, authorize } = require('../middleware/authMiddleware');
-const { validateAuthInput } = require('../middleware/validation');
+} = require('./auth.controller');
+const { auth, authorize } = require('../../middleware/authMiddleware');
+const { validateAuthInput } = require('../../middleware/validation');
 
 const router = express.Router();
 

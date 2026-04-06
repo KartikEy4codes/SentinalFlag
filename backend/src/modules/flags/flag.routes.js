@@ -6,9 +6,9 @@ const {
   updateFlag,
   deleteFlag,
   toggleFlag,
-} = require('../controllers/flagController');
-const { auth, authorize } = require('../middleware/authMiddleware');
-const { validateFlagInput } = require('../middleware/validation');
+} = require('./flag.controller');
+const { auth, authorize } = require('../../middleware/authMiddleware');
+const { validateFlagInput } = require('../../middleware/validation');
 
 const router = express.Router();
 

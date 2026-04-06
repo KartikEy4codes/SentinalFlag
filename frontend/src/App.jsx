@@ -4,10 +4,10 @@ import { supabase } from './utils/supabase';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { AuthProvider } from './context/AuthContext';
-import { useAuth } from './hooks/useAuth';
-import Navbar from './components/Common/Navbar';
-import Sidebar from './components/Common/Sidebar';
+import { AuthProvider } from './features/auth/context/AuthContext';
+import { useAuth } from './features/auth/hooks/useAuth';
+import Navbar from './components/layout/Navbar';
+import Sidebar from './components/layout/Sidebar';
 
 // Pages
 import Home from './pages/Home';

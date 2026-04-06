@@ -1,4 +1,4 @@
-const Flag = require('../models/Flag');
+const Flag = require('./flag.model');
 
 // In-memory flag cache
 const flagCache = new Map();

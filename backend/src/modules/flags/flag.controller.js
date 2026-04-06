@@ -1,6 +1,6 @@
-const Flag = require('../models/Flag');
-const AuditLog = require('../models/AuditLog');
-const { refreshCache } = require('../services/flagService');
+const Flag = require('./flag.model');
+const AuditLog = require('../audit/audit.model');
+const { refreshCache } = require('./flag.service');
 
 // Initialize cache
 refreshCache();

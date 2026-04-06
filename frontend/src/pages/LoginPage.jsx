@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/flagService';
-import { useAuth } from '../hooks/useAuth';
+import { authService } from '../features/flags/services/flagService';
+import { useAuth } from '../features/auth/hooks/useAuth';
 import { mockUser, getMockAuthToken } from '../utils/mockData';
 
 export const LoginPage = () => {

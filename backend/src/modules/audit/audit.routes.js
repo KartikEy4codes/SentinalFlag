@@ -3,8 +3,8 @@ const {
   getAuditLogs,
   getAuditLogDetail,
   getAuditStats,
-} = require('../controllers/auditController');
-const { auth, authorize } = require('../middleware/authMiddleware');
+} = require('./audit.controller');
+const { auth, authorize } = require('../../middleware/authMiddleware');
 
 const router = express.Router();
 
