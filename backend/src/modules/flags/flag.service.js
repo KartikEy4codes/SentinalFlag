@@ -22,6 +22,9 @@ const refreshCache = async () => {
 /**
  * Initialize MongoDB Change Stream for Real-Time synchronization
  */
+let changeStreamInitAttempts = 0;
+const maxChangeStreamAttempts = 1;
+
 const initChangeStream = () => {
     try {
         const changeStream = Flag.watch();
@@ -32,18 +35,40 @@ const initChangeStream = () => {
         });
 
         changeStream.on('error', (error) => {
-            if (error.message && (error.message.includes('$changeStream') || error.message.includes('replica'))) {
-                console.warn('⚠️ [Change Stream] MongoDB is running as a standalone node. Change streams are disabled.');
-                // Do not retry
-            } else {
-                console.error('[Change Stream] Error:', error.message);
+            // Check if it's a replica set error
+            if (error.code === 40573) {
+                if (changeStreamInitAttempts === 0) {
+                    console.warn('[Change Stream] ⚠️  MongoDB replica set not configured. Change streams disabled. Real-time updates will not work.');
+                    changeStreamInitAttempts++;
+                }
+                return;
+            }
+            
+            console.error('[Change Stream] Error:', error.message);
+            // Attempt to restart the stream after a delay for other errors
+            if (changeStreamInitAttempts < maxChangeStreamAttempts) {
+                changeStreamInitAttempts++;
                 setTimeout(initChangeStream, 5000);
             }
         });
 
         console.log('✅ [Change Stream] Watching Flag collection for changes...');
     } catch (error) {
+        // Check if it's a replica set error
+        if (error.code === 40573 || error.codeName === 'Location40573') {
+            if (changeStreamInitAttempts === 0) {
+                console.warn('[Change Stream] ⚠️  MongoDB replica set not configured. Change streams disabled. Real-time updates will not work.');
+                changeStreamInitAttempts++;
+            }
+            return;
+        }
+        
         console.error('[Change Stream] Initialization error:', error.message);
+        // Attempt to restart the stream after a delay for other errors
+        if (changeStreamInitAttempts < maxChangeStreamAttempts) {
+            changeStreamInitAttempts++;
+            setTimeout(initChangeStream, 5000);
+        }
     }
 };
 

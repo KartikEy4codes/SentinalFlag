@@ -3,9 +3,9 @@ import React from 'react';
 const ChartsSection = ({ stats }) => {
     // Mock data for rollout distribution
     const rolloutData = [
-        { label: '0%', count: 12, color: '#94a3b8' },
-        { label: '10-25%', count: 8, color: '#60a5fa' },
-        { label: '50%', count: 15, color: '#818cf8' },
+        { label: '0%', count: 12, color: '#0ea5e9' },
+        { label: '10-25%', count: 8, color: '#22d3ee' },
+        { label: '50%', count: 15, color: '#a78bfa' },
         { label: '100%', count: 24, color: '#34d399' },
     ];
 
@@ -29,18 +29,18 @@ const ChartsSection = ({ stats }) => {
                         return (
                             <div key={item.label} className="flex-1 flex flex-col items-center group">
                                 <div
-                                    className="w-full rounded-t-lg transition-all duration-500 relative group-hover:brightness-110"
+                                    className="w-full rounded-t-lg transition-all duration-500 relative group-hover:scale-y-105"
                                     style={{
                                         height: `${height}%`,
-                                        backgroundColor: item.color,
-                                        boxShadow: `0 4px 12px ${item.color}33`
+                                        background: `linear-gradient(180deg, ${item.color} 0%, ${item.color}cc 70%, ${item.color}80 100%)`,
+                                        boxShadow: `0 8px 16px ${item.color}44`
                                     }}
                                 >
                                     <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                                         {item.count} flags
                                     </div>
                                 </div>
-                                <span className="text-xs font-semibold text-slate-400 mt-4">{item.label}</span>
+                                <span className="text-xs font-semibold text-slate-600 mt-4">{item.label}</span>
                             </div>
                         );
                     })}

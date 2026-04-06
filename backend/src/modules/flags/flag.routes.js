@@ -19,10 +19,10 @@ router.use(auth);
 router.get('/', getAllFlags);
 router.get('/:id', getFlag);
 
-// Admin-only routes
-router.post('/', authorize('admin'), validateFlagInput, createFlag);
-router.put('/:id', authorize('admin'), validateFlagInput, updateFlag);
-router.delete('/:id', authorize('admin'), deleteFlag);
-router.patch('/:id/toggle', authorize('admin'), toggleFlag);
+// User/viewer routes (normal user and viewer can manage flags)
+router.post('/', authorize('user', 'viewer'), validateFlagInput, createFlag);
+router.put('/:id', authorize('user', 'viewer'), validateFlagInput, updateFlag);
+router.delete('/:id', authorize('user', 'viewer'), deleteFlag);
+router.patch('/:id/toggle', authorize('user', 'viewer'), toggleFlag);
 
 module.exports = router;
