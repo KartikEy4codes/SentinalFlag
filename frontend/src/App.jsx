@@ -11,42 +11,38 @@ import Sidebar from './components/Common/Sidebar';
 
 // Pages
 import Home from './pages/Home';
-import FlagsPage from './pages/FlagsPage';
 import LoginPage from './pages/LoginPage';
-<<<<<<< HEAD
+import SignupPage from './pages/SignupPage';
+import FlagsPage from './pages/FlagsPage';
 import UserPage from './pages/UserPage';
 import SettingsPage from './pages/Setting';
-=======
-import SignupPage from './pages/SignupPage';
->>>>>>> ae47d7ebd6d19691cca3399309264f7f6a19d5a9
+import AuditLogs from './pages/AuditLogs';
 
 import './App.css';
 
 function Todos() {
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     async function getTodos() {
-      const { data: todos } = await supabase.from('todos').select()
-
-      if (todos) {
-        setTodos(todos)
-      }
+      const { data: todos } = await supabase.from('todos').select();
+      if (todos) setTodos(todos);
     }
-
-    getTodos()
-  }, [])
+    getTodos();
+  }, []);
 
   return (
     <ul className="p-8">
       {todos.map((todo) => (
-        <li key={todo.id} className="p-4 bg-white shadow mb-2 rounded">{todo.name}</li>
+        <li key={todo.id} className="p-4 bg-white shadow mb-2 rounded">
+          {todo.name}
+        </li>
       ))}
     </ul>
-  )
+  );
 }
 
-
+// ✅ Protected Route
 const ProtectedRoute = ({ component: Component }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -61,19 +57,32 @@ function AppContent() {
 
   return (
     <div className="flex min-h-screen bg-slate-50">
+      
+      {/* Sidebar */}
       {isAuthenticated && <Sidebar />}
+
+      {/* Main Content */}
       <div className={`flex-1 flex flex-col ${isAuthenticated ? 'ml-64' : ''}`}>
+        
+        {/* Navbar */}
         {isAuthenticated && <Navbar user={user} onLogout={logout} />}
+
+        {/* Routes */}
         <main className="flex-1 overflow-y-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+
             <Route path="/flags" element={<ProtectedRoute component={FlagsPage} />} />
-            <Route path="/todos" element={<Todos />} />
-            <Route path="*" element={<Navigate to="/" />} />
             <Route path="/users" element={<ProtectedRoute component={UserPage} />} />
             <Route path="/settings" element={<ProtectedRoute component={SettingsPage} />} />
+            <Route path="/audit-logs" element={<ProtectedRoute component={AuditLogs} />} />
+
+            <Route path="/todos" element={<Todos />} />
+
+            {/* ✅ ALWAYS KEEP THIS LAST */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
       </div>

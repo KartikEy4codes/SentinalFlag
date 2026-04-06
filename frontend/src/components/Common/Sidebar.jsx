@@ -1,67 +1,78 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
-    LayoutDashboard,
-    Flag,
-    Settings,
-    Users,
-    History,
-    ChevronRight
-} from 'lucide-react';
+  LayoutDashboard,
+  Flag,
+  Users,
+  FileText,
+  Settings,
+  ChevronRight,
+} from "lucide-react";
 
 const Sidebar = () => {
-    const menuItems = [
-        { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
-        { name: 'Feature Flags', icon: <Flag size={20} />, path: '/flags' },
-        { name: 'Users', icon: <Users size={20} />, path: '/users' },
-        { name: 'Audit Logs', icon: <History size={20} />, path: '/audit' },
-        { name: 'Settings', icon: <Settings size={20} />, path: '/settings' },
-    ];
+  const location = useLocation();
 
-    return (
-        <aside className="w-64 bg-slate-900 text-white h-screen fixed left-0 top-0 z-20 border-r border-slate-800 flex flex-col">
-            <div className="p-6 border-b border-slate-800 flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <Flag className="text-white" size={20} />
+  const menuItems = [
+    { name: "Dashboard", path: "/", icon: LayoutDashboard },
+    { name: "Feature Flags", path: "/flags", icon: Flag },
+    { name: "Users", path: "/users", icon: Users },
+    { name: "Audit Logs", path: "/audit-logs", icon: FileText },
+    { name: "Settings", path: "/settings", icon: Settings },
+  ];
+
+  return (
+    <div className="fixed top-0 left-0 h-full w-64 bg-[#0B1A2B] text-white flex flex-col">
+
+      {/* Logo */}
+      <div className="flex items-center gap-2 px-6 py-5 border-b border-[#1f2d3d]">
+        <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+          <span className="font-bold">P</span>
+        </div>
+        <span className="text-lg font-semibold">Sentinel Flag</span>
+      </div>
+
+      {/* Menu */}
+      <div className="flex-1 px-3 py-4 space-y-1">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const active = location.pathname === item.path;
+
+          return (
+            <Link key={item.path} to={item.path}>
+              <div
+                className={`flex items-center justify-between px-4 py-3 rounded-lg transition ${
+                  active
+                    ? "bg-[#13263A] text-blue-400"
+                    : "text-gray-400 hover:bg-[#13263A] hover:text-white"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon size={18} />
+                  <span className="text-sm">{item.name}</span>
                 </div>
-                <h1 className="text-xl font-bold tracking-tight">Sentinel Flag</h1>
-            </div>
 
-            <nav className="flex-1 p-4 space-y-2 mt-4">
-                {menuItems.map((item) => (
-                    <NavLink
-                        key={item.name}
-                        to={item.path}
-                        className={({ isActive }) =>
-                            `flex items-center justify-between p-3 rounded-lg transition-all duration-200 group ${isActive
-                                ? 'bg-blue-600/10 text-blue-400 border border-blue-600/20'
-                                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                            }`
-                        }
-                    >
-                        <div className="flex items-center gap-3">
-                            {item.icon}
-                            <span className="font-medium">{item.name}</span>
-                        </div>
-                        <ChevronRight
-                            size={16}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        />
-                    </NavLink>
-                ))}
-            </nav>
+                {/* Arrow for active */}
+                {active && <ChevronRight size={16} />}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
 
-            <div className="p-4 border-t border-slate-800">
-                <div className="p-4 bg-slate-800/40 rounded-xl border border-slate-700/50">
-                    <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-2">Usage</p>
-                    <div className="h-1.5 w-full bg-slate-700 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 w-[65%]" />
-                    </div>
-                    <p className="text-[11px] text-slate-400 mt-2">13 / 20 Flags active</p>
-                </div>
-            </div>
-        </aside>
-    );
+      {/* Usage Card */}
+      <div className="p-4 m-3 bg-[#0f2235] rounded-xl border border-[#1f2d3d]">
+        <div className="text-xs text-gray-400 mb-2">USAGE</div>
+
+        <div className="w-full bg-[#1f2d3d] rounded-full h-2 mb-2">
+          <div className="bg-blue-500 h-2 rounded-full w-[65%]"></div>
+        </div>
+
+        <div className="text-xs text-gray-400">
+          13 / 20 Flags active
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Sidebar;
