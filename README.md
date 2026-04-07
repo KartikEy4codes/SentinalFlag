@@ -36,6 +36,7 @@ You do: Click a button → Feature is ON/OFF instantly
 cd backend
 npm install
 npm start
+// this will start the frontend.
 ```
 Backend runs on: **http://localhost:5000**
 
