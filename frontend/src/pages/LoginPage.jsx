@@ -28,18 +28,12 @@ export const LoginPage = () => {
 
     try {
       setLoading(true);
-      // Try real API first
-      try {
-        const response = await authService.login(formData.email, formData.password);
-        login(response.data.token, response.data.user);
-      } catch (err) {
-        // Demo mode - allow any submission
-        console.log('Demo mode: Using mock authentication');
-        login(getMockAuthToken(), mockUser);
-      }
+      const response = await authService.login(formData.email, formData.password);
+      login(response.data.token, response.data.user);
       navigate('/flags');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed. Check credentials.');
     } finally {
       setLoading(false);
     }
@@ -136,7 +130,14 @@ export const LoginPage = () => {
             🎬 Try Demo Account
           </button>
 
-          <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+          <p className="text-sm text-gray-300 text-center mt-4">
+            Don\'t have an account yet?{' '}
+            <button onClick={() => navigate('/signup')} className="text-blue-300 underline">
+              Sign up
+            </button>
+          </p>
+
+          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
             <p className="text-xs text-blue-300 text-center mb-2">📝 Demo Credentials</p>
             <p className="text-xs text-gray-400 text-center">
               <strong className="text-gray-300">Email:</strong> admin@sentinelflag.dev<br />
