@@ -1,19 +1,41 @@
 import React from 'react';
 
-const ChartsSection = ({ stats }) => {
-    // Mock data for rollout distribution
+const ChartsSection = ({ stats, flags = [] }) => {
+    const totalFlags = flags.length;
+
     const rolloutData = [
-        { label: '0%', count: 12, color: '#0ea5e9' },
-        { label: '10-25%', count: 8, color: '#22d3ee' },
-        { label: '50%', count: 15, color: '#a78bfa' },
-        { label: '100%', count: 24, color: '#34d399' },
+        { label: '0%', count: flags.filter((flag) => (flag.rolloutPercentage || 0) === 0).length, color: '#0ea5e9' },
+        { label: '1-25%', count: flags.filter((flag) => {
+            const pct = flag.rolloutPercentage || 0;
+            return pct > 0 && pct <= 25;
+        }).length, color: '#22d3ee' },
+        { label: '26-75%', count: flags.filter((flag) => {
+            const pct = flag.rolloutPercentage || 0;
+            return pct > 25 && pct <= 75;
+        }).length, color: '#a78bfa' },
+        { label: '76-100%', count: flags.filter((flag) => (flag.rolloutPercentage || 0) > 75).length, color: '#34d399' },
     ];
 
-    const envData = [
-        { label: 'Dev', count: 45, color: '#60a5fa' },
-        { label: 'Staging', count: 25, color: '#f59e0b' },
-        { label: 'Prod', count: 30, color: '#ef4444' },
-    ];
+    const envCounts = flags.reduce((acc, flag) => {
+        const env = flag.environment || 'Unknown';
+        acc[env] = (acc[env] || 0) + 1;
+        return acc;
+    }, {});
+
+    const envColors = {
+        Dev: '#60a5fa',
+        Development: '#60a5fa',
+        Staging: '#f59e0b',
+        Prod: '#ef4444',
+        Production: '#ef4444',
+        Unknown: '#94a3b8',
+    };
+
+    const envData = Object.entries(envCounts).map(([label, count]) => ({
+        label,
+        count,
+        color: envColors[label] || '#8b5cf6',
+    }));
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -85,7 +107,7 @@ const ChartsSection = ({ stats }) => {
                                 />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-2xl font-black text-slate-800">100</span>
+                                <span className="text-2xl font-black text-slate-800">{totalFlags}</span>
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Flags</span>
                             </div>
                         </div>

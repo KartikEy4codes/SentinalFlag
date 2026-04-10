@@ -2,10 +2,6 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  Flag,
-  Users,
-  FileText,
-  Settings,
   ChevronRight,
 } from "lucide-react";
 
@@ -13,11 +9,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { name: "Dashboard", path: "/", icon: LayoutDashboard },
-    { name: "Feature Flags", path: "/flags", icon: Flag },
-    { name: "Users", path: "/users", icon: Users },
-    { name: "Audit Logs", path: "/audit-logs", icon: FileText },
-    { name: "Settings", path: "/settings", icon: Settings },
+    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   ];
 
   return (

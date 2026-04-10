@@ -20,7 +20,7 @@ const SignupPage = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/flags');
+      navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
 
@@ -39,7 +39,7 @@ const SignupPage = () => {
       const response = await authService.register(formData);
 
       login(response.data.token, response.data.user);
-      navigate('/flags');
+      navigate('/dashboard');
 
     } catch (err) {
       console.error('Signup error:', err);

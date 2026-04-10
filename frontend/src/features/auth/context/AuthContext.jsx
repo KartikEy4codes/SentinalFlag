@@ -18,7 +18,9 @@ export const AuthProvider = ({ children }) => {
           setUser(response.data.data);
           setIsAuthenticated(true);
         } catch (error) {
+          console.error('Auth check failed:', error);
           localStorage.removeItem('authToken');
+          setUser(null);
           setIsAuthenticated(false);
         }
       }
@@ -34,11 +36,16 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    setUser(null);
-    setIsAuthenticated(false);
-    authService.logout();
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('authToken');
+      setUser(null);
+      setIsAuthenticated(false);
+    }
   };
 
   const value = {

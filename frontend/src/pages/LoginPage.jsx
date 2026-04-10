@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../features/flags/services/flagService';
 import { useAuth } from '../features/auth/hooks/useAuth';
-import { mockUser, getMockAuthToken } from '../utils/mockData';
 
 export const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -13,7 +12,7 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/flags');
+      navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
 
@@ -30,26 +29,10 @@ export const LoginPage = () => {
       setLoading(true);
       const response = await authService.login(formData.email, formData.password);
       login(response.data.token, response.data.user);
-      navigate('/flags');
+      navigate('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed. Check credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      setLoading(true);
-      // Use demo credentials
-      setFormData({ email: 'admin@sentinelflag.dev', password: 'demo@!23' });
-      login(getMockAuthToken(), mockUser);
-      setTimeout(() => navigate('/flags'), 300);
-    } catch (err) {
-      console.error('Demo login error:', err);
     } finally {
       setLoading(false);
     }
@@ -117,34 +100,12 @@ export const LoginPage = () => {
             </button>
           </form>
 
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-gray-600/50"></div>
-            <span className="text-xs text-gray-400">or</span>
-            <div className="flex-1 h-px bg-gray-600/50"></div>
-          </div>
-
-          <button
-            onClick={handleDemoLogin}
-            disabled={loading}
-            className="w-full py-3 border border-purple-500/50 text-purple-300 rounded-lg font-semibold hover:bg-purple-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
-          >
-            🎬 Try Demo Account
-          </button>
-
           <p className="text-sm text-gray-300 text-center mt-4">
-            Don\'t have an account yet?{' '}
+            Don't have an account yet?{' '}
             <button onClick={() => navigate('/signup')} className="text-blue-300 underline">
               Sign up
             </button>
           </p>
-
-          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-            <p className="text-xs text-blue-300 text-center mb-2">📝 Demo Credentials</p>
-            <p className="text-xs text-gray-400 text-center">
-              <strong className="text-gray-300">Email:</strong> admin@sentinelflag.dev<br />
-              <strong className="text-gray-300">Password:</strong> demo@!23
-            </p>
-          </div>
         </div>
       </div>
     </div>

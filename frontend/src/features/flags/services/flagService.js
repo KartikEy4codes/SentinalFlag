@@ -1,9 +1,4 @@
-import axios from "axios";
-
-// ✅ Create API instance
-const api = axios.create({
-  baseURL: "http://localhost:5000/api", // change if needed
-});
+import api from "../../../services/api";
 
 // 🔹 FLAG SERVICE
 export const flagService = {
@@ -20,7 +15,7 @@ export const authService = {
   register: (data) => api.post('/auth/register', data),
   login: (email, password) => api.post('/auth/login', { email, password }),
   getCurrentUser: () => api.get('/auth/me'),
-  logout: () => localStorage.removeItem('authToken'),
+  logout: () => Promise.resolve(), // Handled by AuthContext
 };
 
 // 🔹 AUDIT SERVICE

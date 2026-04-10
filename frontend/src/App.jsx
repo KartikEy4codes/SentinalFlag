@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { supabase } from './utils/supabase';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,37 +9,11 @@ import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 
 // Pages
-import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import FlagsPage from './pages/FlagsPage';
 import UserPage from './pages/UserPage';
-import SettingsPage from './pages/Setting';
-import AuditLogs from './pages/AuditLogs';
 
 import './App.css';
-
-function Todos() {
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    async function getTodos() {
-      const { data: todos } = await supabase.from('todos').select();
-      if (todos) setTodos(todos);
-    }
-    getTodos();
-  }, []);
-
-  return (
-    <ul className="p-8">
-      {todos.map((todo) => (
-        <li key={todo.id} className="p-4 bg-white shadow mb-2 rounded">
-          {todo.name}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 // ✅ Protected Route
 const ProtectedRoute = ({ component: Component }) => {
@@ -70,19 +43,14 @@ function AppContent() {
         {/* Routes */}
         <main className="flex-1 overflow-y-auto">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
 
-            <Route path="/flags" element={<ProtectedRoute component={FlagsPage} />} />
-            <Route path="/users" element={<ProtectedRoute component={UserPage} />} />
-            <Route path="/settings" element={<ProtectedRoute component={SettingsPage} />} />
-            <Route path="/audit-logs" element={<ProtectedRoute component={AuditLogs} />} />
-
-            <Route path="/todos" element={<Todos />} />
+            <Route path="/dashboard" element={<ProtectedRoute component={UserPage} />} />
 
             {/* ✅ ALWAYS KEEP THIS LAST */}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
         </main>
       </div>
