@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
 
 export const FlagForm = ({ onSubmit, initialData = null, loading = false }) => {
+  const formattedInitialData = initialData
+    ? {
+        ...initialData,
+        targetingRules:
+          typeof initialData.targetingRules === 'object'
+            ? JSON.stringify(initialData.targetingRules, null, 2)
+            : initialData.targetingRules || '{}',
+        tags: Array.isArray(initialData.tags) ? initialData.tags.join(', ') : initialData.tags || '',
+        targetUsers: Array.isArray(initialData.targetUsers)
+          ? initialData.targetUsers.join(', ')
+          : initialData.targetUsers || '',
+      }
+    : null;
+
   const [formData, setFormData] = useState(
-    initialData || {
+    formattedInitialData || {
       name: '',
       description: '',
       enabled: false,
@@ -10,6 +24,7 @@ export const FlagForm = ({ onSubmit, initialData = null, loading = false }) => {
       rolloutPercentage: 0,
       strategyType: 'percentage',
       targetingRules: '{}',
+      targetUsers: '',
       tags: '',
     }
   );
@@ -46,6 +61,9 @@ export const FlagForm = ({ onSubmit, initialData = null, loading = false }) => {
     const submitData = {
       ...formData,
       targetingRules: typeof formData.targetingRules === 'string' ? JSON.parse(formData.targetingRules) : formData.targetingRules,
+      targetUsers: typeof formData.targetUsers === 'string'
+        ? formData.targetUsers.split(',').map((user) => user.trim()).filter((user) => user)
+        : formData.targetUsers,
       tags: formData.tags
         .split(',')
         .map((tag) => tag.trim())
@@ -147,6 +165,25 @@ export const FlagForm = ({ onSubmit, initialData = null, loading = false }) => {
             <p className="text-red-500 text-xs mt-1 font-medium">{errors.rolloutPercentage}</p>
           )}
         </div>
+
+        {formData.strategyType === 'user-targeting' && (
+          <div className="col-span-2">
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Target Users</label>
+            <input
+              type="text"
+              name="targetUsers"
+              value={formData.targetUsers}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              placeholder="user1, user2, user3"
+              disabled={loading}
+            />
+            <p className="text-xs text-slate-500 mt-2">Comma-separated user IDs or email addresses to target for this flag.</p>
+            {errors.targetUsers && (
+              <p className="text-red-500 text-xs mt-1 font-medium">{errors.targetUsers}</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="p-4 bg-slate-900 rounded-xl">
