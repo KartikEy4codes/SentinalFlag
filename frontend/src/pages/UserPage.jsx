@@ -322,6 +322,7 @@ function Card({ title, value, sub, green, gray, purple }) {
       <h2 className="text-2xl font-bold">{value}</h2>
       <p className="text-xs text-gray-400">{sub}</p>
     </div>
+    
   );
 }
 
