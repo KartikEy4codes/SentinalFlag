@@ -1,77 +1,103 @@
 import React from 'react';
-
 import { Edit2, Trash2, ShieldCheck, ShieldAlert, MoreHorizontal } from 'lucide-react';
 
 export const FlagList = ({ flags, onEdit, onDelete, onToggle }) => {
+  if (flags.length === 0) {
+    return (
+      <div className="card-base p-12 text-center">
+        <div className="empty-state">
+          <div className="empty-state-icon">🚩</div>
+          <div className="empty-state-title">No flags found</div>
+          <div className="empty-state-text">Create your first feature flag to get started</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="card-base overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Flag Name</th>
-              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Environment</th>
-              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Strategy</th>
-              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Rollout</th>
-              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Status</th>
-              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Actions</th>
+            <tr className="bg-gray-100 border-b border-gray-300">
+              <th className="table-cell text-left table-cell-label">Flag Name</th>
+              <th className="table-cell text-left table-cell-label">Environment</th>
+              <th className="table-cell text-left table-cell-label">Strategy</th>
+              <th className="table-cell text-left table-cell-label">Rollout</th>
+              <th className="table-cell text-left table-cell-label">Status</th>
+              <th className="table-cell text-right table-cell-label">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
-            {flags.map((flag) => (
-              <tr key={flag._id} className="hover:bg-slate-50/80 transition-colors group">
-                <td className="px-6 py-4">
+          <tbody className="divide-y divide-gray-300">
+            {flags.map((flag, idx) => (
+              <tr key={flag._id || idx} className="hover:bg-gray-100 transition-colors group">
+                <td className="table-cell">
                   <div>
-                    <p className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{flag.name}</p>
-                    <p className="text-xs text-slate-400 line-clamp-1">{flag.description}</p>
+                    <p className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">{flag.name}</p>
+                    <p className="text-xs text-gray-600 line-clamp-1 mt-1">{flag.description || 'No description'}</p>
                   </div>
                 </td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${flag.environment === 'Prod' ? 'bg-red-50 text-red-600 border-red-100' :
-                    flag.environment === 'Staging' ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                      'bg-blue-50 text-blue-600 border-blue-100'
-                    }`}>
-                    {flag.environment}
+                <td className="table-cell">
+                  <span className={`env-badge ${
+                    flag.environment === 'Prod' || flag.environment === 'Production' ? 'env-prod' :
+                    flag.environment === 'Staging' ? 'env-staging' :
+                    'env-dev'
+                  }`}>
+                    {flag.environment === 'Prod' || flag.environment === 'Production' ? 'Prod' : flag.environment}
                   </span>
                 </td>
-                <td className="px-6 py-4">
-                  <span className="text-sm font-medium text-slate-600">{flag.strategyType || 'percentage'}</span>
+                <td className="table-cell">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-semibold">
+                    {flag.strategyType || 'percentage'}
+                  </span>
                 </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-16 bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-blue-500 h-full" style={{ width: `${flag.rolloutPercentage}%` }} />
+                <td className="table-cell">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 max-w-xs">
+                      <div className="progress-bar">
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${flag.rolloutPercentage || 0}%` }}
+                        />
+                      </div>
                     </div>
-                    <span className="text-xs font-bold text-slate-500">{flag.rolloutPercentage}%</span>
+                    <span className="text-xs font-bold text-gray-600 min-w-max">{flag.rolloutPercentage || 0}%</span>
                   </div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="table-cell">
                   <button
-                    onClick={() => onToggle(flag._id)}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${flag.enabled
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
+                    onClick={() => onToggle && onToggle(flag._id)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                      flag.enabled
+                        ? 'bg-green-900/40 text-green-200 border-green-800 hover:bg-green-900/60'
+                        : 'bg-red-900/40 text-red-200 border-red-800 hover:bg-red-900/60'
+                    }`}
                   >
-                    {flag.enabled ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
+                    {flag.enabled ? (
+                      <ShieldCheck size={14} />
+                    ) : (
+                      <ShieldAlert size={14} />
+                    )}
                     {flag.enabled ? 'Enabled' : 'Disabled'}
                   </button>
                 </td>
-                <td className="px-6 py-4 text-right">
-                  <div className="flex justify-end items-center gap-2">
+                <td className="table-cell text-right">
+                  <div className="flex justify-end items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
-                      onClick={() => onEdit(flag._id)}
-                      className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition"
+                      onClick={() => onEdit && onEdit(flag._id)}
+                      className="btn-icon"
+                      title="Edit flag"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
-                      onClick={() => onDelete(flag._id)}
-                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition"
+                      onClick={() => onDelete && onDelete(flag._id)}
+                      className="btn-icon hover:text-gray-300 hover:bg-gray-900"
+                      title="Delete flag"
                     >
                       <Trash2 size={16} />
                     </button>
-                    <button className="p-1.5 text-slate-400 hover:text-slate-600 transition">
+                    <button className="btn-icon">
                       <MoreHorizontal size={16} />
                     </button>
                   </div>

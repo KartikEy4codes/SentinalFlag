@@ -39,54 +39,45 @@ export const LoginPage = () => {
   };
 
   return (
-    
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center relative overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      </div>
-
-      <div className="relative z-10 w-full max-w-md px-4">
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg border border-purple-500/20 shadow-2xl p-8 animate-slideUp">
+    <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
+      <div className="w-full max-w-md px-4">
+        <div className="bg-white rounded-lg border border-gray-300 shadow-2xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-2">
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                🚩 Sentinel
-              </span>
+            <h1 className="text-4xl font-bold mb-2 text-gray-900">
+              🚩 Sentinel
             </h1>
-            <p className="text-gray-400 text-sm">Feature Flag Management</p>
+            <p className="text-gray-600 text-sm">Feature Flag Management</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 text-red-300 rounded-lg text-sm">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
               ⚠️ {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition"
                 placeholder="your@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition"
                 placeholder="••••••••"
               />
             </div>
@@ -94,15 +85,15 @@ export const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               {loading ? '🔄 Logging in...' : '✨ Login'}
             </button>
           </form>
 
-          <p className="text-sm text-gray-300 text-center mt-4">
+          <p className="text-sm text-gray-600 text-center mt-4">
             Don't have an account yet?{' '}
-            <button onClick={() => navigate('/signup')} className="text-blue-300 underline">
+            <button onClick={() => navigate('/signup')} className="text-blue-600 underline hover:text-blue-700">
               Sign up
             </button>
           </p>
