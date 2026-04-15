@@ -1,19 +1,21 @@
 const jwt = require('jsonwebtoken');
+const config = require('../config/env');
 const User = require('../modules/auth/user.model');
 
 // @middleware   Authenticate user with JWT
 exports.auth = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    const token = authHeader?.split(' ')[1] || req.headers['x-access-token'] || req.query.token || req.body.token;
 
-    if (!token) {
+    if (!token || token === 'undefined' || token === 'null') {
       return res.status(401).json({
         success: false,
         message: 'No token provided. Please login.',
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
     req.user = await User.findById(decoded.id);
 
     if (!req.user) {

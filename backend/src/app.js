@@ -19,7 +19,13 @@ const app = express();
 
 // Middleware
 app.use(helmet());
-app.use(cors({ origin: config.CORS_ORIGIN }));
+app.use(
+  cors({
+    origin: config.CORS_ORIGIN,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 app.use(morgan('combined'));
 app.use(requestLogger);
 app.use(express.json({ limit: '10mb' }));

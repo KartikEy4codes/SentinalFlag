@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { authService } from '../../flags/services/flagService';
+import { setAuthToken } from '../../../services/api';
 
 export const AuthContext = createContext();
 
@@ -13,6 +14,7 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       const token = localStorage.getItem('authToken');
       if (token) {
+        setAuthToken(token);
         try {
           const response = await authService.getCurrentUser();
           setUser(response.data.data);
@@ -20,6 +22,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           console.error('Auth check failed:', error);
           localStorage.removeItem('authToken');
+          setAuthToken(null);
           setUser(null);
           setIsAuthenticated(false);
         }
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token, userData) => {
     localStorage.setItem('authToken', token);
+    setAuthToken(token);
     setUser(userData);
     setIsAuthenticated(true);
   };
@@ -43,6 +47,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       localStorage.removeItem('authToken');
+      setAuthToken(null);
       setUser(null);
       setIsAuthenticated(false);
     }

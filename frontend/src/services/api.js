@@ -10,11 +10,22 @@ const api = axios.create({
   },
 });
 
+export const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common.Authorization;
+  }
+};
+
 // Request interceptor to add auth token
 api.interceptors.request.use((config) => {
+  config.headers = config.headers || {};
   const token = localStorage.getItem('authToken');
-  if (token) {
+  if (token && token !== 'undefined' && token !== 'null') {
     config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
   }
   return config;
 });
